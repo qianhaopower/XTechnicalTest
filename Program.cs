@@ -32,21 +32,56 @@ namespace XeroTechnicalTest
         {
             Console.WriteLine("Welcome to Xero Tech Test!");
 
-            CreateInvoiceWithOneIte();
-            CreateInvoiceWithMultipleItemsAndQuantities();
-            RemoveItem();
-            MergeInvoices();
-            CloneInvoice();
-            InvoiceToString();
+            try
+            {
+                Console.WriteLine("Creating invoice with one item...");
+                CreateInvoiceWithOneItem();
+
+                Console.WriteLine("Creating invoice with multiple items and quantities...");
+                CreateInvoiceWithMultipleItemsAndQuantities();
+
+                Console.WriteLine("Removing items...");
+                RemoveItem();
+
+                Console.WriteLine("Merging invoices...");
+                MergeInvoices();
+
+                Console.WriteLine("Cloning invoices...");
+                CloneInvoice();
+
+                Console.WriteLine("Printing invoices...");
+                InvoiceToString();
+
+                Console.WriteLine("Press Entert to stop");
+                Console.ReadLine();
+
+            }
+            catch(XeroException ex)
+            {
+                Console.WriteLine("Error happend, please see log file");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Error happend, please see log file");
+            }
         }
 
         private static void CreateInvoiceWithOneItem()
         {
             var invoice = new Invoice();
 
-           invoice.AddInvoiceLine(new InvoiceLine(){
-                InvoiceLineId = "1",
-                Cost = 6.99,
+            int invoiceLineId = 0;
+            Int32.TryParse("1", out invoiceLineId);
+
+            if (invoiceLineId == 0)
+            {
+                throw new Exception("InvoiceLine Id must be greater than zero");
+            }
+
+            invoice.AddInvoiceLine(new InvoiceLine()
+            {
+                InvoiceLineId = invoiceLineId,
+                Cost = (decimal)6.99,
                 Quantity = 1,
                 Description = "Apple"
             });
@@ -69,7 +104,7 @@ namespace XeroTechnicalTest
             invoice.AddInvoiceLine(new InvoiceLine()
             {
                 InvoiceLineId = 2,
-                Cost = 5.21,
+                Cost = (decimal)5.21,
                 Quantity = 1,
                 Description = "Orange"
             });
@@ -77,7 +112,7 @@ namespace XeroTechnicalTest
             invoice.AddInvoiceLine(new InvoiceLine()
             {
                 InvoiceLineId = 3,
-                Cost = 5.21,
+                Cost = (decimal)5.21,
                 Quantity = 5,
                 Description = "Pineapple"
             });
@@ -92,7 +127,7 @@ namespace XeroTechnicalTest
             invoice.AddInvoiceLine(new InvoiceLine()
             {
                 InvoiceLineId = 1,
-                Cost = 5.21,
+                Cost = (decimal)5.21,
                 Quantity = 1,
                 Description = "Orange"
             });
@@ -100,7 +135,7 @@ namespace XeroTechnicalTest
             invoice.AddInvoiceLine(new InvoiceLine()
             {
                 InvoiceLineId = 2,
-                Cost = 10.99,
+                Cost = (decimal)10.99,
                 Quantity = 4,
                 Description = "Banana"
             });
@@ -116,17 +151,17 @@ namespace XeroTechnicalTest
             invoice1.AddInvoiceLine(new InvoiceLine()
             {
                 InvoiceLineId = 1,
-                Cost = 10.33,
+                Cost = (decimal)10.33,
                 Quantity = 4,
                 Description = "Banana"
             });
-            
+
             var invoice2 = new Invoice();
 
             invoice2.AddInvoiceLine(new InvoiceLine()
             {
                 InvoiceLineId = 2,
-                Cost = 5.22,
+                Cost = (decimal)5.22,
                 Quantity = 1,
                 Description = "Orange"
             });
@@ -134,7 +169,7 @@ namespace XeroTechnicalTest
             invoice2.AddInvoiceLine(new InvoiceLine()
             {
                 InvoiceLineId = 3,
-                Cost = 6.27,
+                Cost = (decimal)6.27,
                 Quantity = 3,
                 Description = "Blueberries"
             });
@@ -150,7 +185,7 @@ namespace XeroTechnicalTest
             invoice.AddInvoiceLine(new InvoiceLine()
             {
                 InvoiceLineId = 1,
-                Cost = 6.99,
+                Cost = (decimal)6.99,
                 Quantity = 1,
                 Description = "Apple"
             });
@@ -158,7 +193,7 @@ namespace XeroTechnicalTest
             invoice.AddInvoiceLine(new InvoiceLine()
             {
                 InvoiceLineId = 2,
-                Cost = 6.27,
+                Cost = (decimal)6.27,
                 Quantity = 3,
                 Description = "Blueberries"
             });
@@ -178,13 +213,14 @@ namespace XeroTechnicalTest
                     new InvoiceLine()
                     {
                         InvoiceLineId = 1,
-                        Cost = 6.99,
+                        Cost = (decimal)6.99,
                         Quantity = 1,
                         Description = "Apple"
                     }
                 }
             };
-   
+
             Console.WriteLine(invoice.ToString());
         }
     }
+}
