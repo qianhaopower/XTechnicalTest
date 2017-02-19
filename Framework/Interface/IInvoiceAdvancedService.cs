@@ -14,7 +14,7 @@ namespace XeroTechnicalTest
 
         InvoiceLine CreateInvoiceLine(int id, int quantity, string description, decimal cost);
 
-        Invoice CreateInvoice(IEnumerable<InvoiceLine> lines, int invoiceNumber, DateTime invoiceDate);
+        Invoice CreateInvoice(IEnumerable<InvoiceLine> lines, string invoiceNumber, DateTime invoiceDate);
 
         Invoice RemoveLine(Invoice invoice, int lineId);
 

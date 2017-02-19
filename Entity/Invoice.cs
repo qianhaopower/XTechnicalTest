@@ -10,13 +10,17 @@ namespace XeroTechnicalTest
     public class Invoice : BaseEntity
     {
         #region Private variable
-        private int _invoiceNumber;
+        private string _invoiceNumber;
         private DateTime _invoiceDate;
         private List<InvoiceLine> _lineItems;
         #endregion
 
         #region Public property
-        public int InvoiceNumber
+
+        /// <summary>
+        /// invoice number should be string to allow different format
+        /// </summary>
+        public string InvoiceNumber
         {
             get { return _invoiceNumber; }
             set { _invoiceNumber = value; }

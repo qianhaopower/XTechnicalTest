@@ -159,7 +159,7 @@ namespace XeroTechnicalTest
             var invoice = new Invoice()
             {
                 InvoiceDate = DateTime.Now,
-                InvoiceNumber = 1000,
+                InvoiceNumber = 1000.ToString(),
                 LineItems = new List<InvoiceLine>()
                 {
                     new InvoiceLine()

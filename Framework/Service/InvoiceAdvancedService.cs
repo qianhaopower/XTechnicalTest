@@ -23,7 +23,7 @@ namespace XeroTechnicalTest
             return toClone.Clone();
         }
 
-        public Invoice CreateInvoice(IEnumerable<InvoiceLine> lines,int invoiceNumber, DateTime invoiceDate)
+        public Invoice CreateInvoice(IEnumerable<InvoiceLine> lines,string invoiceNumber, DateTime invoiceDate)
         {
             return new Invoice() {
                 InvoiceNumber = invoiceNumber,

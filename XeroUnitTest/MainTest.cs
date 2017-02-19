@@ -10,19 +10,23 @@ namespace XeroTechnicalTest.Tests
     [TestClass()]
     public class MainTest
     {
+        #region Property
         //auto fac container for creating the service
         private static IContainer _container { get; set; }
+        #endregion
 
-        
-
+        #region Constructor
         public MainTest()
         {
             //register service
             var builder = new ContainerBuilder();
             builder.RegisterType<InvoiceBasicService>().As<IInvoiceBasicService>();
+            builder.RegisterType<InvoiceAdvancedService>().As<IInvoiceAdvancedService>();
             _container = builder.Build();
         }
+        #endregion
 
+        #region Basic service Test
         [TestMethod()]
         public void CreateInvoiceWithOneItemTest()
         {
@@ -91,6 +95,112 @@ namespace XeroTechnicalTest.Tests
             }
             
         }
+        #endregion
+
+        #region Advanced Service Test
+        [TestMethod()]
+        public void CreateInvoiceWithOneItemAdvancedTest()
+        {
+            using (var scope = _container.BeginLifetimeScope())
+            {
+                var service = scope.Resolve<IInvoiceAdvancedService>();
+                var invoiceLine = service.CreateInvoiceLine(1, 3, "Peach", 4.67m);
+                var invoice = service.CreateInvoice(new List<InvoiceLine>() { invoiceLine }, "1235", DateTime.Now);
+                var totalNumberOne = invoice.GetTotal();
+                Assert.AreEqual(totalNumberOne, 14.01m);
+            }
+        }
+
+        [TestMethod()]
+        public void CreateInvoiceWithMultipleItemsAndQuantitiesAdvancedTest()
+        {
+            using (var scope = _container.BeginLifetimeScope())
+            {
+                var service = scope.Resolve<IInvoiceAdvancedService>();
+                var invoiceLine1 = service.CreateInvoiceLine(1, 3, "Big Peach", 4.67m);
+                var invoiceLine2 = service.CreateInvoiceLine(2, 4, "Small Peach", 1.23m);
+
+                var invoice = service.CreateInvoice(new List<InvoiceLine>() { invoiceLine1, invoiceLine2 }, "1236", DateTime.Now);
+
+                var totalNumberOne = invoice.GetTotal();
+                Assert.AreEqual(totalNumberOne, 18.93m);
+            }
+        }
+
+        [TestMethod()]
+        public void RemoveItemAdvancedTest()
+        {
+            using (var scope = _container.BeginLifetimeScope())
+            {
+                var service = scope.Resolve<IInvoiceAdvancedService>();
+                var invoiceLine1 = service.CreateInvoiceLine(1, 3, "Big Peach", 4.67m);
+                var invoiceLine2 = service.CreateInvoiceLine(2, 4, "Small Peach", 1.23m);
+
+                var invoice = service.CreateInvoice(new List<InvoiceLine>() { invoiceLine1, invoiceLine2 }, "1236", DateTime.Now);
+                service.RemoveLine(invoice,1);
+                var totalNumberOne = invoice.GetTotal();
+                Assert.AreEqual(totalNumberOne, 4.92m);
+            }
+        }
+
+        [TestMethod()]
+        public void MergeInvoicesAdvancedTest()
+        {
+            using (var scope = _container.BeginLifetimeScope())
+            {
+                var service = scope.Resolve<IInvoiceAdvancedService>();
+                var invoiceLine1 = service.CreateInvoiceLine(1, 3, "Big Peach", 4.67m);
+                var invoiceLine2 = service.CreateInvoiceLine(2, 4, "Small Peach", 1.23m);
+
+                var invoicePeach = service.CreateInvoice(new List<InvoiceLine>() { invoiceLine1, invoiceLine2 }, "1236", DateTime.Now);
+
+
+                var invoiceLine3 = service.CreateInvoiceLine(1, 5, "Big Mango", 14.7m);
+                var invoiceLine4 = service.CreateInvoiceLine(2, 7, "Small Mango", 11.3m);
+
+                var invoiceMango = service.CreateInvoice(new List<InvoiceLine>() { invoiceLine3, invoiceLine4 }, "1236", DateTime.Now);
+
+
+                service.MergeInvoice(invoicePeach, invoiceMango);
+                var totalNumberOne = invoicePeach.GetTotal();
+                Assert.AreEqual(totalNumberOne, 171.53m);
+            }
+        }
+
+        [TestMethod()]
+        public void CloneInvoiceAdvancedTest()
+        {
+            using (var scope = _container.BeginLifetimeScope())
+            {
+                var service = scope.Resolve<IInvoiceAdvancedService>();
+                var invoiceLine1 = service.CreateInvoiceLine(1, 3, "Big Peach", 4.67m);
+                var invoiceLine2 = service.CreateInvoiceLine(2, 4, "Small Peach", 1.23m);
+
+                var invoice = service.CreateInvoice(new List<InvoiceLine>() { invoiceLine1, invoiceLine2 }, "1236", DateTime.Now);
+              
+                var totalNumberOne = service.CloneInvoice(invoice).GetTotal();
+                Assert.AreEqual(totalNumberOne, 18.93m);
+            }
+        }
+
+
+        [TestMethod()]
+        public void ToStringAdvancedTest()
+        {
+            using (var scope = _container.BeginLifetimeScope())
+            {
+                var service = scope.Resolve<IInvoiceAdvancedService>();
+                var invoiceLine1 = service.CreateInvoiceLine(1, 3, "Big Peach", 4.67m);
+                var invoiceLine2 = service.CreateInvoiceLine(2, 4, "Small Peach", 1.23m);
+
+                var invoice = service.CreateInvoice(new List<InvoiceLine>() { invoiceLine1, invoiceLine2 }, "1236", DateTime.Now);
+                var result = service.invoiceToString(invoice);
+                var dateNow = DateTime.Now.ToString("dd/MM/yyyy", CultureInfo.InvariantCulture);
+                Assert.AreEqual(result, string.Format("Invoice Number: 1236, InvoiceDate: {0}, LineItemCount: 2", dateNow));
+            }
+
+        }
+        #endregion
     }
 }
 

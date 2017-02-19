@@ -22,7 +22,6 @@
 */
 
 using Autofac;
-
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -36,42 +35,17 @@ namespace XeroTechnicalTest
 
         static void Main(string[] args)
         {
-            Console.WriteLine("Welcome to Xero Tech Test!");
-
+           
             try
             {
-
                 Trace.TraceInformation(string.Format("Application starts at {0}",DateTime.Now.ToString()));
                 Setup();
 
                 using (var scope = _container.BeginLifetimeScope())
                 {
-                    var basicService = scope.Resolve<IInvoiceBasicService>();
-
-                    Console.WriteLine("Creating invoice with one item...");
-                    var totalNumberOne = basicService.CreateInvoiceWithOneItem();
-                    Console.WriteLine(string.Format("Finish creating invoice with one item. The total value is {0}.",totalNumberOne));
-
-                    Console.WriteLine("Creating invoice with multiple items and quantities...");
-                    var totalNumberMultiple = basicService.CreateInvoiceWithMultipleItemsAndQuantities();
-                    Console.WriteLine(string.Format("Finish creating invoice with multiple items. The total value is {0}.", totalNumberMultiple));
-
-                    Console.WriteLine("Removing items...");
-                    var totalNumberRemove = basicService.RemoveItem();
-                    Console.WriteLine(string.Format("Finish removing invoice. The total value is {0}.", totalNumberRemove));
-
-                    Console.WriteLine("Merging invoices...");
-                    var totalNumberMerge = basicService.MergeInvoices();
-                    Console.WriteLine(string.Format("Finish merging invoices. The total value is {0}.", totalNumberMerge));
-
-                    Console.WriteLine("Cloning invoices...");
-                    var totalNumberClone = basicService.CloneInvoice();
-                    Console.WriteLine(string.Format("Finish cloning invoice. The total value is {0}.", totalNumberClone));
-
-                    Console.WriteLine("Printing invoices...");
-                    var resultString = basicService.InvoiceToString();
-                    Console.WriteLine(string.Format("Finish printing invoice. {0}.", resultString));
-
+                    Console.WriteLine("Welcome to Xero Tech Test!");
+                    RunBasicCases(scope);
+                    RunAdvancedCases(scope);
                     Console.WriteLine("Press Entert to stop");
                     Console.ReadLine();
                 }
@@ -86,6 +60,92 @@ namespace XeroTechnicalTest
                 Trace.TraceError(string.Format("Error found. The message is: {0}", ex.Message));
                 Console.WriteLine("Error found , please see log file.");
             }
+        }
+
+
+        static void RunBasicCases(ILifetimeScope scope)
+        {
+            var basicService = scope.Resolve<IInvoiceBasicService>();
+
+            Console.WriteLine("Creating invoice with one item...");
+            var totalNumberOne = basicService.CreateInvoiceWithOneItem();
+            Console.WriteLine(string.Format("Finish creating invoice with one item. The total value is {0}.", totalNumberOne));
+
+            Console.WriteLine("Creating invoice with multiple items and quantities...");
+            var totalNumberMultiple = basicService.CreateInvoiceWithMultipleItemsAndQuantities();
+            Console.WriteLine(string.Format("Finish creating invoice with multiple items. The total value is {0}.", totalNumberMultiple));
+
+            Console.WriteLine("Removing items...");
+            var totalNumberRemove = basicService.RemoveItem();
+            Console.WriteLine(string.Format("Finish removing invoice. The total value is {0}.", totalNumberRemove));
+
+            Console.WriteLine("Merging invoices...");
+            var totalNumberMerge = basicService.MergeInvoices();
+            Console.WriteLine(string.Format("Finish merging invoices. The total value is {0}.", totalNumberMerge));
+
+            Console.WriteLine("Cloning invoices...");
+            var totalNumberClone = basicService.CloneInvoice();
+            Console.WriteLine(string.Format("Finish cloning invoice. The total value is {0}.", totalNumberClone));
+
+            Console.WriteLine("Printing invoices...");
+            var resultString = basicService.InvoiceToString();
+            Console.WriteLine(string.Format("Finish printing invoice. {0}.", resultString));
+        }
+
+        static void RunAdvancedCases(ILifetimeScope scope)
+        {
+            var advancedService = scope.Resolve<IInvoiceAdvancedService>();
+
+            Console.WriteLine("(Advanced) Creating invoice with one item...");
+            var invoiceLine = advancedService.CreateInvoiceLine(1, 3, "Peach", 4.67m);
+            var invoice = advancedService.CreateInvoice(new List<InvoiceLine>() { invoiceLine }, "1235", DateTime.Now);
+            var totalNumberOne = invoice.GetTotal();
+            Console.WriteLine(string.Format("Finish creating invoice with one item. The total value is {0}.", totalNumberOne));
+
+
+            Console.WriteLine("(Advanced) Creating invoice with multiple items and quantities...");
+            var invoiceLine1 = advancedService.CreateInvoiceLine(1, 3, "Big Peach", 4.67m);
+            var invoiceLine2 = advancedService.CreateInvoiceLine(2, 4, "Small Peach", 1.23m);
+            var invoiceMultiple = advancedService.CreateInvoice(new List<InvoiceLine>() { invoiceLine1, invoiceLine2 }, "1236", DateTime.Now);
+            var totalNumberMultiple = invoiceMultiple.GetTotal();
+            Console.WriteLine(string.Format("Finish creating invoice with multiple items. The total value is {0}.", totalNumberMultiple));
+
+
+            Console.WriteLine("(Advanced) Removing items...");
+            var invoiceLine1ForRemove = advancedService.CreateInvoiceLine(1, 3, "Big Peach", 4.67m);
+            var invoiceLine2ForRemove = advancedService.CreateInvoiceLine(2, 4, "Small Peach", 1.23m);
+            var invoiceForRemove = advancedService.CreateInvoice(new List<InvoiceLine>() { invoiceLine1ForRemove, invoiceLine2ForRemove }, "1236", DateTime.Now);
+            advancedService.RemoveLine(invoiceForRemove, 1);
+            var totalNumberRemove = invoiceForRemove.GetTotal();
+            Console.WriteLine(string.Format("Finish removing invoice. The total value is {0}.", totalNumberRemove));
+
+            Console.WriteLine("(Advanced) Merging invoices...");
+            var invoiceLinePeach1 = advancedService.CreateInvoiceLine(1, 3, "Big Peach", 4.67m);
+            var invoiceLinePeach2 = advancedService.CreateInvoiceLine(2, 4, "Small Peach", 1.23m);
+            var invoicePeach = advancedService.CreateInvoice(new List<InvoiceLine>() { invoiceLinePeach1, invoiceLinePeach2 }, "1236", DateTime.Now);
+            var invoiceLineMango1 = advancedService.CreateInvoiceLine(1, 5, "Big Mango", 14.7m);
+            var invoiceLineMango2 = advancedService.CreateInvoiceLine(2, 7, "Small Mango", 11.3m);
+            var invoiceMango = advancedService.CreateInvoice(new List<InvoiceLine>() { invoiceLineMango1, invoiceLineMango2 }, "1236", DateTime.Now);
+            advancedService.MergeInvoice(invoicePeach, invoiceMango);
+            var totalNumberMerge = invoicePeach.GetTotal();
+            Console.WriteLine(string.Format("Finish merging invoices. The total value is {0}.", totalNumberMerge));
+
+
+            Console.WriteLine("(Advanced) Cloning invoices...");
+            var invoiceLine1Clone = advancedService.CreateInvoiceLine(1, 3, "Big Peach", 4.67m);
+            var invoiceLine2Clone = advancedService.CreateInvoiceLine(2, 4, "Small Peach", 1.23m);
+            var invoiceClone = advancedService.CreateInvoice(new List<InvoiceLine>() { invoiceLine1Clone, invoiceLine2Clone }, "1236", DateTime.Now);
+            var totalNumberClone = advancedService.CloneInvoice(invoiceClone).GetTotal();
+            
+            Console.WriteLine(string.Format("Finish cloning invoice. The total value is {0}.", totalNumberClone));
+
+            Console.WriteLine("(Advanced) Printing invoices...");
+            var invoiceLine1Print = advancedService.CreateInvoiceLine(1, 3, "Big Peach", 4.67m);
+            var invoiceLine2Print = advancedService.CreateInvoiceLine(2, 4, "Small Peach", 1.23m);
+
+            var invoicePrint = advancedService.CreateInvoice(new List<InvoiceLine>() { invoiceLine1Print, invoiceLine2Print }, "1236", DateTime.Now);
+            var result = advancedService.invoiceToString(invoicePrint);
+            Console.WriteLine(string.Format("Finish printing invoice. {0}.", result));
         }
 
         //set up code for the application
