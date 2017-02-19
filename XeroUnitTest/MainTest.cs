@@ -1,95 +1,33 @@
-﻿/*
-    Welcome to the Xero technical excercise!
-    ---------------------------------------------------------------------------------
-    The test consists of a small invoice application that has a number of issues.
-
-    Your job is to fix them and make sure you can perform the functions in each method below.
-
-    Note your first job is to get the solution compiling! 
-	
-    Rules
-    ---------------------------------------------------------------------------------
-    * The entire solution must be written in C# (any version)
-    * You can modify any of the code in this solution, split out classes, add projects etc
-    * You can modify Invoice and InvoiceLine, rename and add methods, change property types (hint) 
-    * Feel free to use any libraries or frameworks you like as long as they are .net based
-    * Feel free to write tests (hint) 
-    * Show off your skills! 
-
-    Good luck :) 
-
-    When you have finished the solution please zip it up and email it back to the recruiter or developer who sent it to you
-*/
-
+﻿using XeroTechnicalTest;
 using System;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Collections.Generic;
+using System.Globalization;
 
-namespace XeroTechnicalTest
+namespace XeroTechnicalTest.Tests
 {
-    public class Program
+    [TestClass()]
+    public class MainTest
     {
-        static void Main(string[] args)
-        {
-            Console.WriteLine("Welcome to Xero Tech Test!");
 
-            try
-            {
-                Console.WriteLine("Creating invoice with one item...");
-                CreateInvoiceWithOneItem();
-
-                Console.WriteLine("Creating invoice with multiple items and quantities...");
-                CreateInvoiceWithMultipleItemsAndQuantities();
-
-                Console.WriteLine("Removing items...");
-                RemoveItem();
-
-                Console.WriteLine("Merging invoices...");
-                MergeInvoices();
-
-                Console.WriteLine("Cloning invoices...");
-                CloneInvoice();
-
-                Console.WriteLine("Printing invoices...");
-                InvoiceToString();
-
-                Console.WriteLine("Press Entert to stop");
-                Console.ReadLine();
-
-            }
-            catch(XeroException ex)
-            {
-                Console.WriteLine("Error happend, please see log file");
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine("Error happend, please see log file");
-            }
-        }
-
-        private static void CreateInvoiceWithOneItem()
+        [TestMethod()]
+        public void CreateInvoiceWithOneItemTest()
         {
             var invoice = new Invoice();
 
-            int invoiceLineId = 0;
-            Int32.TryParse("1", out invoiceLineId);
-
-            if (invoiceLineId == 0)
-            {
-                throw new XeroException("InvoiceLine Id must be greater than zero");
-            }
-
             invoice.AddInvoiceLine(new InvoiceLine()
             {
-                InvoiceLineId = invoiceLineId,
+                InvoiceLineId = 1,
                 Cost = (decimal)6.99,
                 Quantity = 1,
                 Description = "Apple"
             });
 
-            Console.WriteLine(invoice.GetTotal());
+            Assert.AreEqual(invoice.GetTotal(), 6.99m);
         }
 
-        private static void CreateInvoiceWithMultipleItemsAndQuantities()
+        [TestMethod()]
+        public void CreateInvoiceWithMultipleItemsAndQuantitiesTest()
         {
             var invoice = new Invoice();
 
@@ -116,11 +54,12 @@ namespace XeroTechnicalTest
                 Quantity = 5,
                 Description = "Pineapple"
             });
+            Assert.AreEqual(invoice.GetTotal(), 72.1m);
 
-            Console.WriteLine(invoice.GetTotal());
         }
 
-        private static void RemoveItem()
+        [TestMethod()]
+        public void RemoveItemTest()
         {
             var invoice = new Invoice();
 
@@ -141,10 +80,11 @@ namespace XeroTechnicalTest
             });
 
             invoice.RemoveInvoiceLine(1);
-            Console.WriteLine(invoice.GetTotal());
+            Assert.AreEqual(invoice.GetTotal(), 43.96m);
         }
 
-        private static void MergeInvoices()
+        [TestMethod()]
+        public void MergeInvoicesTest()
         {
             var invoice1 = new Invoice();
 
@@ -175,10 +115,11 @@ namespace XeroTechnicalTest
             });
 
             invoice1.MergeInvoices(invoice2);
-            Console.WriteLine(invoice1.GetTotal());
+            Assert.AreEqual(invoice1.GetTotal(), 65.35m);
         }
 
-        private static void CloneInvoice()
+        [TestMethod()]
+        public void CloneInvoiceTest()
         {
             var invoice = new Invoice();
 
@@ -199,10 +140,12 @@ namespace XeroTechnicalTest
             });
 
             var clonedInvoice = invoice.Clone();
-            Console.WriteLine(clonedInvoice.GetTotal());
+            Assert.AreEqual(clonedInvoice.GetTotal(), 25.8m);
         }
 
-        private static void InvoiceToString()
+
+        [TestMethod()]
+        public void ToStringTest()
         {
             var invoice = new Invoice()
             {
@@ -219,8 +162,9 @@ namespace XeroTechnicalTest
                     }
                 }
             };
-
-            Console.WriteLine(invoice.ToString());
+            var dateNow = DateTime.Now.ToString("dd/MM/yyyy", CultureInfo.InvariantCulture);
+            Assert.AreEqual(invoice.ToString(), string.Format("Invoice Number: 1000, InvoiceDate: {0}, LineItemCount: 1", dateNow));
         }
     }
 }
+

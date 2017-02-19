@@ -45,7 +45,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ExceptionHandling\Invoice.cs" />
+    <Compile Include="ExceptionHandling\XeroException.cs" />
     <Compile Include="Invoice.cs" />
     <Compile Include="InvoiceLine.cs" />
     <Compile Include="Program.cs" />
