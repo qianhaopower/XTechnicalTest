@@ -3,167 +3,93 @@ using System;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Collections.Generic;
 using System.Globalization;
+using Autofac;
 
 namespace XeroTechnicalTest.Tests
 {
     [TestClass()]
     public class MainTest
     {
+        //auto fac container for creating the service
+        private static IContainer _container { get; set; }
+
+        
+
+        public MainTest()
+        {
+            //register service
+            var builder = new ContainerBuilder();
+            builder.RegisterType<InvoiceService>().As<IInvoiceService>();
+            _container = builder.Build();
+        }
 
         [TestMethod()]
         public void CreateInvoiceWithOneItemTest()
         {
-            var invoice = new Invoice();
-
-            invoice.AddInvoiceLine(new InvoiceLine()
+            using (var scope = _container.BeginLifetimeScope())
             {
-                InvoiceLineId = 1,
-                Cost = (decimal)6.99,
-                Quantity = 1,
-                Description = "Apple"
-            });
-
-            Assert.AreEqual(invoice.GetTotal(), 6.99m);
+                var service = scope.Resolve<IInvoiceService>();
+                var totalNumberOne = service.CreateInvoiceWithOneItem();
+                Assert.AreEqual(totalNumberOne, 6.99m);
+            }
         }
 
         [TestMethod()]
         public void CreateInvoiceWithMultipleItemsAndQuantitiesTest()
         {
-            var invoice = new Invoice();
-
-            invoice.AddInvoiceLine(new InvoiceLine()
+            using (var scope = _container.BeginLifetimeScope())
             {
-                InvoiceLineId = 1,
-                Cost = 10.21m,
-                Quantity = 4,
-                Description = "Banana"
-            });
-
-            invoice.AddInvoiceLine(new InvoiceLine()
-            {
-                InvoiceLineId = 2,
-                Cost = (decimal)5.21,
-                Quantity = 1,
-                Description = "Orange"
-            });
-
-            invoice.AddInvoiceLine(new InvoiceLine()
-            {
-                InvoiceLineId = 3,
-                Cost = (decimal)5.21,
-                Quantity = 5,
-                Description = "Pineapple"
-            });
-            Assert.AreEqual(invoice.GetTotal(), 72.1m);
-
+                var service = scope.Resolve<IInvoiceService>();
+                var totalNumberMultiple = service.CreateInvoiceWithMultipleItemsAndQuantities();
+                Assert.AreEqual(totalNumberMultiple, 72.1m);
+            }     
         }
 
         [TestMethod()]
         public void RemoveItemTest()
         {
-            var invoice = new Invoice();
-
-            invoice.AddInvoiceLine(new InvoiceLine()
+            using (var scope = _container.BeginLifetimeScope())
             {
-                InvoiceLineId = 1,
-                Cost = (decimal)5.21,
-                Quantity = 1,
-                Description = "Orange"
-            });
-
-            invoice.AddInvoiceLine(new InvoiceLine()
-            {
-                InvoiceLineId = 2,
-                Cost = (decimal)10.99,
-                Quantity = 4,
-                Description = "Banana"
-            });
-
-            invoice.RemoveInvoiceLine(1);
-            Assert.AreEqual(invoice.GetTotal(), 43.96m);
+                var service = scope.Resolve<IInvoiceService>();
+                var totalNumberRemove = service.RemoveItem();
+                Assert.AreEqual(totalNumberRemove, 43.96m);
+            }
         }
 
         [TestMethod()]
         public void MergeInvoicesTest()
         {
-            var invoice1 = new Invoice();
-
-            invoice1.AddInvoiceLine(new InvoiceLine()
+            using (var scope = _container.BeginLifetimeScope())
             {
-                InvoiceLineId = 1,
-                Cost = (decimal)10.33,
-                Quantity = 4,
-                Description = "Banana"
-            });
-
-            var invoice2 = new Invoice();
-
-            invoice2.AddInvoiceLine(new InvoiceLine()
-            {
-                InvoiceLineId = 2,
-                Cost = (decimal)5.22,
-                Quantity = 1,
-                Description = "Orange"
-            });
-
-            invoice2.AddInvoiceLine(new InvoiceLine()
-            {
-                InvoiceLineId = 3,
-                Cost = (decimal)6.27,
-                Quantity = 3,
-                Description = "Blueberries"
-            });
-
-            invoice1.MergeInvoices(invoice2);
-            Assert.AreEqual(invoice1.GetTotal(), 65.35m);
+                var service = scope.Resolve<IInvoiceService>();
+                var totalNumberMerge = service.MergeInvoices();
+                Assert.AreEqual(totalNumberMerge, 65.35m);
+            }
         }
 
         [TestMethod()]
         public void CloneInvoiceTest()
         {
-            var invoice = new Invoice();
-
-            invoice.AddInvoiceLine(new InvoiceLine()
+            using (var scope = _container.BeginLifetimeScope())
             {
-                InvoiceLineId = 1,
-                Cost = (decimal)6.99,
-                Quantity = 1,
-                Description = "Apple"
-            });
-
-            invoice.AddInvoiceLine(new InvoiceLine()
-            {
-                InvoiceLineId = 2,
-                Cost = (decimal)6.27,
-                Quantity = 3,
-                Description = "Blueberries"
-            });
-
-            var clonedInvoice = invoice.Clone();
-            Assert.AreEqual(clonedInvoice.GetTotal(), 25.8m);
+                var service = scope.Resolve<IInvoiceService>();
+                var totalNumberClone = service.CloneInvoice();
+                Assert.AreEqual(totalNumberClone, 25.8m);
+            }
         }
 
 
         [TestMethod()]
         public void ToStringTest()
         {
-            var invoice = new Invoice()
+            using (var scope = _container.BeginLifetimeScope())
             {
-                InvoiceDate = DateTime.Now,
-                InvoiceNumber = 1000,
-                LineItems = new List<InvoiceLine>()
-                {
-                    new InvoiceLine()
-                    {
-                        InvoiceLineId = 1,
-                        Cost = (decimal)6.99,
-                        Quantity = 1,
-                        Description = "Apple"
-                    }
-                }
-            };
-            var dateNow = DateTime.Now.ToString("dd/MM/yyyy", CultureInfo.InvariantCulture);
-            Assert.AreEqual(invoice.ToString(), string.Format("Invoice Number: 1000, InvoiceDate: {0}, LineItemCount: 1", dateNow));
+                var service = scope.Resolve<IInvoiceService>();
+                var result = service.InvoiceToString();
+                var dateNow = DateTime.Now.ToString("dd/MM/yyyy", CultureInfo.InvariantCulture);
+                Assert.AreEqual(result, string.Format("Invoice Number: 1000, InvoiceDate: {0}, LineItemCount: 1", dateNow));
+            }
+            
         }
     }
 }

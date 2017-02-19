@@ -51,6 +51,7 @@ namespace XeroTechnicalTest
         }
         #endregion
 
+        #region Public methods
         /// <summary>
         /// Add invoice line to the invoice
         /// </summary>
@@ -77,7 +78,7 @@ namespace XeroTechnicalTest
             }
             else
             {
-                // do nothing for now, nothing to remove
+                throw new XeroException(string.Format("Can not find invoice with id {0}", someId));
             }
         }
 
@@ -112,7 +113,7 @@ namespace XeroTechnicalTest
                 });
                 maxIdLocal ++;
             }
-            
+
         }
 
         /// <summary>
@@ -136,5 +137,7 @@ namespace XeroTechnicalTest
                 this.InvoiceDate.ToString("dd/MM/yyyy",CultureInfo.InvariantCulture),
             this.LineItems.Count());
         }
+
+        #endregion
     }
 }

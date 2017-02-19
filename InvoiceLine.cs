@@ -2,7 +2,11 @@
 {
     public class InvoiceLine
     {
+        /// <summary>
+        /// Should consider use GUID, not sure if that is the requirement for now.
+        /// </summary>
         public int InvoiceLineId { get; set; }
+
         public string Description { get; set; }
         public int Quantity { get; set; }
 

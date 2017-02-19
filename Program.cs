@@ -21,206 +21,82 @@
     When you have finished the solution please zip it up and email it back to the recruiter or developer who sent it to you
 */
 
+using Autofac;
+
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 
 namespace XeroTechnicalTest
 {
     public class Program
     {
+        //auto fac container for creating the service
+        private static IContainer _container { get; set; }
+
         static void Main(string[] args)
         {
             Console.WriteLine("Welcome to Xero Tech Test!");
 
             try
             {
-                Console.WriteLine("Creating invoice with one item...");
-                CreateInvoiceWithOneItem();
 
-                Console.WriteLine("Creating invoice with multiple items and quantities...");
-                CreateInvoiceWithMultipleItemsAndQuantities();
+                Trace.TraceInformation(string.Format("Application starts at {0}",DateTime.Now.ToString()));
+                Setup();
 
-                Console.WriteLine("Removing items...");
-                RemoveItem();
-
-                Console.WriteLine("Merging invoices...");
-                MergeInvoices();
-
-                Console.WriteLine("Cloning invoices...");
-                CloneInvoice();
-
-                Console.WriteLine("Printing invoices...");
-                InvoiceToString();
-
-                Console.WriteLine("Press Entert to stop");
-                Console.ReadLine();
-
-            }
-            catch(XeroException ex)
-            {
-                Console.WriteLine("Error happend, please see log file");
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine("Error happend, please see log file");
-            }
-        }
-
-        private static void CreateInvoiceWithOneItem()
-        {
-            var invoice = new Invoice();
-
-            int invoiceLineId = 0;
-            Int32.TryParse("1", out invoiceLineId);
-
-            if (invoiceLineId == 0)
-            {
-                throw new XeroException("InvoiceLine Id must be greater than zero");
-            }
-
-            invoice.AddInvoiceLine(new InvoiceLine()
-            {
-                InvoiceLineId = invoiceLineId,
-                Cost = (decimal)6.99,
-                Quantity = 1,
-                Description = "Apple"
-            });
-
-            Console.WriteLine(invoice.GetTotal());
-        }
-
-        private static void CreateInvoiceWithMultipleItemsAndQuantities()
-        {
-            var invoice = new Invoice();
-
-            invoice.AddInvoiceLine(new InvoiceLine()
-            {
-                InvoiceLineId = 1,
-                Cost = 10.21m,
-                Quantity = 4,
-                Description = "Banana"
-            });
-
-            invoice.AddInvoiceLine(new InvoiceLine()
-            {
-                InvoiceLineId = 2,
-                Cost = (decimal)5.21,
-                Quantity = 1,
-                Description = "Orange"
-            });
-
-            invoice.AddInvoiceLine(new InvoiceLine()
-            {
-                InvoiceLineId = 3,
-                Cost = (decimal)5.21,
-                Quantity = 5,
-                Description = "Pineapple"
-            });
-
-            Console.WriteLine(invoice.GetTotal());
-        }
-
-        private static void RemoveItem()
-        {
-            var invoice = new Invoice();
-
-            invoice.AddInvoiceLine(new InvoiceLine()
-            {
-                InvoiceLineId = 1,
-                Cost = (decimal)5.21,
-                Quantity = 1,
-                Description = "Orange"
-            });
-
-            invoice.AddInvoiceLine(new InvoiceLine()
-            {
-                InvoiceLineId = 2,
-                Cost = (decimal)10.99,
-                Quantity = 4,
-                Description = "Banana"
-            });
-
-            invoice.RemoveInvoiceLine(1);
-            Console.WriteLine(invoice.GetTotal());
-        }
-
-        private static void MergeInvoices()
-        {
-            var invoice1 = new Invoice();
-
-            invoice1.AddInvoiceLine(new InvoiceLine()
-            {
-                InvoiceLineId = 1,
-                Cost = (decimal)10.33,
-                Quantity = 4,
-                Description = "Banana"
-            });
-
-            var invoice2 = new Invoice();
-
-            invoice2.AddInvoiceLine(new InvoiceLine()
-            {
-                InvoiceLineId = 2,
-                Cost = (decimal)5.22,
-                Quantity = 1,
-                Description = "Orange"
-            });
-
-            invoice2.AddInvoiceLine(new InvoiceLine()
-            {
-                InvoiceLineId = 3,
-                Cost = (decimal)6.27,
-                Quantity = 3,
-                Description = "Blueberries"
-            });
-
-            invoice1.MergeInvoices(invoice2);
-            Console.WriteLine(invoice1.GetTotal());
-        }
-
-        private static void CloneInvoice()
-        {
-            var invoice = new Invoice();
-
-            invoice.AddInvoiceLine(new InvoiceLine()
-            {
-                InvoiceLineId = 1,
-                Cost = (decimal)6.99,
-                Quantity = 1,
-                Description = "Apple"
-            });
-
-            invoice.AddInvoiceLine(new InvoiceLine()
-            {
-                InvoiceLineId = 2,
-                Cost = (decimal)6.27,
-                Quantity = 3,
-                Description = "Blueberries"
-            });
-
-            var clonedInvoice = invoice.Clone();
-            Console.WriteLine(clonedInvoice.GetTotal());
-        }
-
-        private static void InvoiceToString()
-        {
-            var invoice = new Invoice()
-            {
-                InvoiceDate = DateTime.Now,
-                InvoiceNumber = 1000,
-                LineItems = new List<InvoiceLine>()
+                using (var scope = _container.BeginLifetimeScope())
                 {
-                    new InvoiceLine()
-                    {
-                        InvoiceLineId = 1,
-                        Cost = (decimal)6.99,
-                        Quantity = 1,
-                        Description = "Apple"
-                    }
-                }
-            };
+                    var service = scope.Resolve<IInvoiceService>();
 
-            Console.WriteLine(invoice.ToString());
+                    Console.WriteLine("Creating invoice with one item...");
+                    var totalNumberOne = service.CreateInvoiceWithOneItem();
+                    Console.WriteLine(string.Format("Finish creating invoice with one item. The total value is {0}.",totalNumberOne));
+
+                    Console.WriteLine("Creating invoice with multiple items and quantities...");
+                    var totalNumberMultiple = service.CreateInvoiceWithMultipleItemsAndQuantities();
+                    Console.WriteLine(string.Format("Finish creating invoice with multiple items. The total value is {0}.", totalNumberMultiple));
+
+                    Console.WriteLine("Removing items...");
+                    var totalNumberRemove = service.RemoveItem();
+                    Console.WriteLine(string.Format("Finish removing invoice. The total value is {0}.", totalNumberRemove));
+
+                    Console.WriteLine("Merging invoices...");
+                    var totalNumberMerge = service.MergeInvoices();
+                    Console.WriteLine(string.Format("Finish merging invoices. The total value is {0}.", totalNumberMerge));
+
+                    Console.WriteLine("Cloning invoices...");
+                    var totalNumberClone = service.CloneInvoice();
+                    Console.WriteLine(string.Format("Finish cloning invoice. The total value is {0}.", totalNumberClone));
+
+                    Console.WriteLine("Printing invoices...");
+                    var resultString = service.InvoiceToString();
+                    Console.WriteLine(string.Format("Finish printing invoice. {0}.", resultString));
+
+                    Console.WriteLine("Press Entert to stop");
+                    Console.ReadLine();
+                }
+            }
+            catch(XeroException ex)//catch all business logic related error
+            {
+                Trace.TraceError(string.Format("Error found in business logic. The message is: {0}", ex.Message));
+                Console.WriteLine("Error found in business logic, please see log file.");
+            }
+            catch (Exception ex)//catch all other errors. Ideally should catch each type of error. i.e. connection etc.
+            {
+                Trace.TraceError(string.Format("Error found. The message is: {0}", ex.Message));
+                Console.WriteLine("Error found , please see log file.");
+            }
         }
+
+        //set up code for the application
+        static void Setup()
+        {
+            //register service
+            var builder = new ContainerBuilder();
+            builder.RegisterType<InvoiceService>().As<IInvoiceService>();
+            _container = builder.Build();
+        }
+
+     
     }
 }
