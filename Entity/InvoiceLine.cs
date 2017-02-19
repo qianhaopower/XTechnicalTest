@@ -1,7 +1,15 @@
 ﻿namespace XeroTechnicalTest
 {
-    public class InvoiceLine
+    public class InvoiceLine  :BaseEntity
     {
+        #region Constructor
+        public InvoiceLine() : base()
+        {
+
+        }
+        #endregion
+
+        #region Properties
         /// <summary>
         /// Should consider use GUID, not sure if that is the requirement for now.
         /// </summary>
@@ -18,5 +26,6 @@
         /// http://stackoverflow.com/questions/1165761/decimal-vs-double-which-one-should-i-use-and-when
         /// </summary>
         public decimal Cost { get; set; }
+        #endregion
     }
 }

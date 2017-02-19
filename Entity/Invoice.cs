@@ -7,7 +7,7 @@ using System.Linq;
 
 namespace XeroTechnicalTest
 {
-    public class Invoice
+    public class Invoice : BaseEntity
     {
         #region Private variable
         private int _invoiceNumber;
@@ -45,7 +45,7 @@ namespace XeroTechnicalTest
         /// <summary>
         /// construstor
         /// </summary>
-        public Invoice()
+        public Invoice() : base()
         {
 
         }
