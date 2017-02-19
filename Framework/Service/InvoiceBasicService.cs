@@ -9,10 +9,10 @@ namespace XeroTechnicalTest
     /// <summary>
     /// Service that perform all invoices related calculation
     /// </summary>
-    public class InvoiceService : BaseService, IInvoiceService
+    public class InvoiceBasicService : BaseService, IInvoiceBasicService
     {
         #region Constructor
-        public InvoiceService()
+        public InvoiceBasicService()
         {
 
         }

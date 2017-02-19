@@ -46,30 +46,30 @@ namespace XeroTechnicalTest
 
                 using (var scope = _container.BeginLifetimeScope())
                 {
-                    var service = scope.Resolve<IInvoiceService>();
+                    var basicService = scope.Resolve<IInvoiceBasicService>();
 
                     Console.WriteLine("Creating invoice with one item...");
-                    var totalNumberOne = service.CreateInvoiceWithOneItem();
+                    var totalNumberOne = basicService.CreateInvoiceWithOneItem();
                     Console.WriteLine(string.Format("Finish creating invoice with one item. The total value is {0}.",totalNumberOne));
 
                     Console.WriteLine("Creating invoice with multiple items and quantities...");
-                    var totalNumberMultiple = service.CreateInvoiceWithMultipleItemsAndQuantities();
+                    var totalNumberMultiple = basicService.CreateInvoiceWithMultipleItemsAndQuantities();
                     Console.WriteLine(string.Format("Finish creating invoice with multiple items. The total value is {0}.", totalNumberMultiple));
 
                     Console.WriteLine("Removing items...");
-                    var totalNumberRemove = service.RemoveItem();
+                    var totalNumberRemove = basicService.RemoveItem();
                     Console.WriteLine(string.Format("Finish removing invoice. The total value is {0}.", totalNumberRemove));
 
                     Console.WriteLine("Merging invoices...");
-                    var totalNumberMerge = service.MergeInvoices();
+                    var totalNumberMerge = basicService.MergeInvoices();
                     Console.WriteLine(string.Format("Finish merging invoices. The total value is {0}.", totalNumberMerge));
 
                     Console.WriteLine("Cloning invoices...");
-                    var totalNumberClone = service.CloneInvoice();
+                    var totalNumberClone = basicService.CloneInvoice();
                     Console.WriteLine(string.Format("Finish cloning invoice. The total value is {0}.", totalNumberClone));
 
                     Console.WriteLine("Printing invoices...");
-                    var resultString = service.InvoiceToString();
+                    var resultString = basicService.InvoiceToString();
                     Console.WriteLine(string.Format("Finish printing invoice. {0}.", resultString));
 
                     Console.WriteLine("Press Entert to stop");
@@ -93,7 +93,8 @@ namespace XeroTechnicalTest
         {
             //register service
             var builder = new ContainerBuilder();
-            builder.RegisterType<InvoiceService>().As<IInvoiceService>();
+            builder.RegisterType<InvoiceBasicService>().As<IInvoiceBasicService>();
+            builder.RegisterType<InvoiceAdvancedService>().As<IInvoiceAdvancedService>();
             _container = builder.Build();
         }
 

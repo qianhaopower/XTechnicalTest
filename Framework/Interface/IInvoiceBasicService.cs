@@ -9,7 +9,7 @@ namespace XeroTechnicalTest
     /// <summary>
     /// Interface that all invoice service should conform
     /// </summary>
-    public interface IInvoiceService : IBaseService
+    public interface IInvoiceBasicService : IBaseService
     {
          decimal CreateInvoiceWithOneItem();
          decimal CreateInvoiceWithMultipleItemsAndQuantities();

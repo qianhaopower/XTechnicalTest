@@ -19,7 +19,7 @@ namespace XeroTechnicalTest.Tests
         {
             //register service
             var builder = new ContainerBuilder();
-            builder.RegisterType<InvoiceService>().As<IInvoiceService>();
+            builder.RegisterType<InvoiceBasicService>().As<IInvoiceBasicService>();
             _container = builder.Build();
         }
 
@@ -28,7 +28,7 @@ namespace XeroTechnicalTest.Tests
         {
             using (var scope = _container.BeginLifetimeScope())
             {
-                var service = scope.Resolve<IInvoiceService>();
+                var service = scope.Resolve<IInvoiceBasicService>();
                 var totalNumberOne = service.CreateInvoiceWithOneItem();
                 Assert.AreEqual(totalNumberOne, 6.99m);
             }
@@ -39,7 +39,7 @@ namespace XeroTechnicalTest.Tests
         {
             using (var scope = _container.BeginLifetimeScope())
             {
-                var service = scope.Resolve<IInvoiceService>();
+                var service = scope.Resolve<IInvoiceBasicService>();
                 var totalNumberMultiple = service.CreateInvoiceWithMultipleItemsAndQuantities();
                 Assert.AreEqual(totalNumberMultiple, 72.1m);
             }     
@@ -50,7 +50,7 @@ namespace XeroTechnicalTest.Tests
         {
             using (var scope = _container.BeginLifetimeScope())
             {
-                var service = scope.Resolve<IInvoiceService>();
+                var service = scope.Resolve<IInvoiceBasicService>();
                 var totalNumberRemove = service.RemoveItem();
                 Assert.AreEqual(totalNumberRemove, 43.96m);
             }
@@ -61,7 +61,7 @@ namespace XeroTechnicalTest.Tests
         {
             using (var scope = _container.BeginLifetimeScope())
             {
-                var service = scope.Resolve<IInvoiceService>();
+                var service = scope.Resolve<IInvoiceBasicService>();
                 var totalNumberMerge = service.MergeInvoices();
                 Assert.AreEqual(totalNumberMerge, 65.35m);
             }
@@ -72,7 +72,7 @@ namespace XeroTechnicalTest.Tests
         {
             using (var scope = _container.BeginLifetimeScope())
             {
-                var service = scope.Resolve<IInvoiceService>();
+                var service = scope.Resolve<IInvoiceBasicService>();
                 var totalNumberClone = service.CloneInvoice();
                 Assert.AreEqual(totalNumberClone, 25.8m);
             }
@@ -84,7 +84,7 @@ namespace XeroTechnicalTest.Tests
         {
             using (var scope = _container.BeginLifetimeScope())
             {
-                var service = scope.Resolve<IInvoiceService>();
+                var service = scope.Resolve<IInvoiceBasicService>();
                 var result = service.InvoiceToString();
                 var dateNow = DateTime.Now.ToString("dd/MM/yyyy", CultureInfo.InvariantCulture);
                 Assert.AreEqual(result, string.Format("Invoice Number: 1000, InvoiceDate: {0}, LineItemCount: 1", dateNow));

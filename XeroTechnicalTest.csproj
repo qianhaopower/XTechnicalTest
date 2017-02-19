@@ -51,14 +51,16 @@
   <ItemGroup>
     <Compile Include="Entity\BaseEntity.cs" />
     <Compile Include="ExceptionHandling\XeroException.cs" />
+    <Compile Include="Framework\Interface\IInvoiceAdvancedService.cs" />
     <Compile Include="Framework\Service\BaseService.cs" />
     <Compile Include="Framework\Interface\IBaseService.cs" />
-    <Compile Include="Framework\Interface\IInvoiceService.cs" />
+    <Compile Include="Framework\Interface\IInvoiceBasicService.cs" />
     <Compile Include="Entity\Invoice.cs" />
     <Compile Include="Entity\InvoiceLine.cs" />
+    <Compile Include="Framework\Service\InvoiceAdvancedService.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Framework\Service\InvoiceService.cs" />
+    <Compile Include="Framework\Service\InvoiceBasicService.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
