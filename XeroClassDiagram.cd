@@ -1,0 +1,84 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Class Name="XeroTechnicalTest.BaseEntity" Collapsed="true">
+    <Position X="13" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAQAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Entity\BaseEntity.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="XeroTechnicalTest.Invoice" Collapsed="true">
+    <Position X="12.5" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAwBAAAAAAAIAAEAgACEAAAAAAAAACAAQEAAAAAABA=</HashCode>
+      <FileName>Entity\Invoice.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="XeroTechnicalTest.InvoiceLine" Collapsed="true">
+    <Position X="14.25" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAgAAAAAAAAIBAAAAAAAAAAAAAAgAAAAAA=</HashCode>
+      <FileName>Entity\InvoiceLine.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="XeroTechnicalTest.XeroException" Collapsed="true">
+    <Position X="13.75" Y="3" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>ExceptionHandling\XeroException.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="XeroTechnicalTest.BaseService" Collapsed="true">
+    <Position X="9.25" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAACAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Framework\Service\BaseService.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="XeroTechnicalTest.InvoiceAdvancedService" Collapsed="true">
+    <Position X="8" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAEAAAAIAAAAEAAAAAAAAAAAAAEAEAAAAAAAAAAAAAE=</HashCode>
+      <FileName>Framework\Service\InvoiceAdvancedService.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.346" />
+  </Class>
+  <Class Name="XeroTechnicalTest.InvoiceBasicService" Collapsed="true">
+    <Position X="10.25" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAgAABAAAAAAAAAAAAAAAAAAAAAEQAEAIAAAAAAAAA=</HashCode>
+      <FileName>Framework\Service\InvoiceBasicService.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="XeroTechnicalTest.Program" Collapsed="true">
+    <Position X="12" Y="3" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAACAAAAAAAAAAAACAAAAAAAAAAAAAAhAAgAAA=</HashCode>
+      <FileName>Program.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Interface Name="XeroTechnicalTest.IBaseService" Collapsed="true">
+    <Position X="9.25" Y="2.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Framework\Interface\IBaseService.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="XeroTechnicalTest.IInvoiceAdvancedService" Collapsed="true">
+    <Position X="7.75" Y="4.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAEAAAAIAAAAEAAAAAAAAAAAAAEAEAAAAAAAAAAAAAE=</HashCode>
+      <FileName>Framework\Interface\IInvoiceAdvancedService.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="XeroTechnicalTest.IInvoiceBasicService" Collapsed="true">
+    <Position X="10.25" Y="4.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAgAABAAAAAAAAAAAAAAAAAAAAAEQAEAIAAAAAAAAA=</HashCode>
+      <FileName>Framework\Interface\IInvoiceBasicService.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>
