@@ -8,9 +8,9 @@ namespace XeroTechnicalTest
     /// </summary>
     public class XeroException : Exception
     {
-        public XeroException(string messge):base (messge)
+        public XeroException(string messge) : base(messge)
         {
-          
+
         }
       
     }

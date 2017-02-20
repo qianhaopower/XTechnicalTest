@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 namespace XeroTechnicalTest
 {
     /// <summary>
-    /// Interface that all invoice service should conform
+    /// Interface that all basic service should conform
     /// </summary>
     public interface IInvoiceBasicService : IBaseService
     {

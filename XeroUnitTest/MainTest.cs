@@ -201,6 +201,72 @@ namespace XeroTechnicalTest.Tests
 
         }
         #endregion
+
+        #region Negative test
+
+        [TestMethod()]
+        public void DuplicateLineId()
+        {
+            using (var scope = _container.BeginLifetimeScope())
+            {
+                try {
+                    var service = scope.Resolve<IInvoiceAdvancedService>();
+
+                    //same line id twice
+                    var invoiceLine1 = service.CreateInvoiceLine(1, 3, "Big Peach", 4.67m);
+                    var invoiceLine2 = service.CreateInvoiceLine(1, 4, "Small Peach", 1.23m);
+
+                    var invoice = service.CreateInvoice(new List<InvoiceLine>() { invoiceLine1, invoiceLine2 }, "1236", DateTime.Now);
+
+                    var totalNumberOne = invoice.GetTotal();
+                }
+                catch (XeroException ex)
+                {
+                    Assert.AreEqual(ex.Message, "Invoice Line Id 1 already existed");
+                }
+                catch (Exception)
+                {
+                    // not the right kind of exception
+                    Assert.Fail();
+                }
+                
+               
+            }
+        }
+
+        [TestMethod()]
+        public void RemoveNonExistingLineId()
+        {
+            using (var scope = _container.BeginLifetimeScope())
+            {
+                try
+                {
+                    var service = scope.Resolve<IInvoiceAdvancedService>();
+
+                    //same line id twice
+                    var invoiceLine1 = service.CreateInvoiceLine(1, 3, "Big Peach", 4.67m);
+                    var invoiceLine2 = service.CreateInvoiceLine(2, 4, "Small Peach", 1.23m);
+
+                    var invoice = service.CreateInvoice(new List<InvoiceLine>() { invoiceLine1, invoiceLine2 }, "1236", DateTime.Now);
+
+                    //line 3 does not exist
+                    service.RemoveLine(invoice, 3);
+                    var totalNumberOne = invoice.GetTotal();
+                }
+                catch (XeroException ex)
+                {
+                    Assert.AreEqual(ex.Message, "Can not find invoice with id 3");
+                }
+                catch (Exception)
+                {
+                    // not the right kind of exception
+                    Assert.Fail();
+                }
+
+
+            }
+        }
+        #endregion
     }
 }
 

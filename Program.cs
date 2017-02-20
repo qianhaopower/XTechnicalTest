@@ -62,7 +62,10 @@ namespace XeroTechnicalTest
             }
         }
 
-
+        /// <summary>
+        /// Original cases
+        /// </summary>
+        /// <param name="scope"></param>
         static void RunBasicCases(ILifetimeScope scope)
         {
             var basicService = scope.Resolve<IInvoiceBasicService>();
@@ -92,6 +95,10 @@ namespace XeroTechnicalTest
             Console.WriteLine(string.Format("Finish printing invoice. {0}.", resultString));
         }
 
+        /// <summary>
+        /// Advanced service can take invoice and invoiceline as parameter.
+        /// </summary>
+        /// <param name="scope"></param>
         static void RunAdvancedCases(ILifetimeScope scope)
         {
             var advancedService = scope.Resolve<IInvoiceAdvancedService>();

@@ -17,6 +17,7 @@ namespace XeroTechnicalTest
 
         }
         #endregion
+
         #region Public methods
         public Invoice CloneInvoice(Invoice toClone)
         {
